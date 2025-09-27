@@ -24,8 +24,10 @@ const UserSchema = new mongoose.Schema({
   certifications: [{ type: String }],
   socialLinks: [{ type: String }],
   location: {
-    latitude: { type: String },
-    longitude: { type: String }
+    pincode: { type: String },
+    city: { type: String },
+    village: { type: String },
+    state: { type: String }
   }
 }, { timestamps: true });
 

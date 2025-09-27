@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../api';
     
@@ -21,11 +21,24 @@ function BatchRegistrationPage() {
     unit: 'kg',
     harvestDate: new Date().toISOString().split('T')[0],
     location: '',
-    latitude: '',
-    longitude: '',
     certifications: [],
     additionalInfo: ''
   });
+
+  // Farmer profile state
+  const [farmerProfile, setFarmerProfile] = useState(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await api.get('/farmer/profile');
+        setFarmerProfile(res.data);
+      } catch (err) {
+        // Optionally handle error
+      }
+    };
+    fetchProfile();
+  }, []);
   
   // Validation state
   const [errors, setErrors] = useState({});
@@ -140,9 +153,13 @@ function BatchRegistrationPage() {
       quantity: parseFloat(formData.quantity),
       unit: formData.unit,
       harvestDate: formData.harvestDate,
-      location: formData.location,
-      latitude: formData.latitude,
-      longitude: formData.longitude,
+      location: {
+        description: formData.location,
+        village: farmerProfile?.location?.village || '',
+        city: farmerProfile?.location?.city || '',
+        pincode: farmerProfile?.location?.pincode || '',
+        state: farmerProfile?.location?.state || ''
+      },
       certifications: formData.certifications,
       additionalInfo: formData.additionalInfo,
       photoUrl: image                  // Base64 image
@@ -308,36 +325,7 @@ function BatchRegistrationPage() {
               />
             </div>
             
-            <div className="md:col-span-2">
-              <div className="flex justify-between items-center mb-2">
-                <label className="block text-gray-300">Coordinates</label>
-                <button 
-                  type="button"
-                  onClick={getLocation}
-                  className="text-sm text-green-400 hover:text-green-300"
-                >
-                  Get Current Location
-                </button>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  name="latitude"
-                  value={formData.latitude}
-                  onChange={handleChange}
-                  className="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white"
-                  placeholder="Latitude"
-                />
-                <input
-                  type="text"
-                  name="longitude"
-                  value={formData.longitude}
-                  onChange={handleChange}
-                  className="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white"
-                  placeholder="Longitude"
-                />
-              </div>
-            </div>
+            {/* Location fields are now auto-filled from farmer profile and not shown in the form */}
           </div>
           
           <div className="mb-6">

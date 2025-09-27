@@ -1,3 +1,49 @@
+// Manufacturer updates processing details for collected harvest
+exports.updateManufacturerDetails = async (req, res) => {
+  if (req.user.role !== 'manufacturer') {
+    return res.status(403).json({ msg: 'Access denied. Only manufacturers can update.' });
+  }
+  try {
+    const harvest = await Harvest.findById(req.params.id);
+    if (!harvest) return res.status(404).json({ msg: 'Harvest not found' });
+    if (harvest.status !== 'Collected') {
+      return res.status(400).json({ msg: 'Only collected harvests can be updated.' });
+    }
+    if (harvest.collectedBy.toString() !== req.user.id) {
+      return res.status(403).json({ msg: 'You can only update harvests you collected.' });
+    }
+    const { processingDetails, remarks, storageLocation, batchNumber } = req.body;
+    if (processingDetails !== undefined) harvest.manufacturerUpdate.processingDetails = processingDetails;
+    if (remarks !== undefined) harvest.manufacturerUpdate.remarks = remarks;
+    if (storageLocation !== undefined) harvest.manufacturerUpdate.storageLocation = storageLocation;
+    if (batchNumber !== undefined) harvest.manufacturerUpdate.batchNumber = batchNumber;
+    await harvest.save();
+    res.json(harvest);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
+// Manufacturer collects a harvest
+exports.collectHarvest = async (req, res) => {
+  if (req.user.role !== 'manufacturer') {
+    return res.status(403).json({ msg: 'Access denied. Only manufacturers can collect.' });
+  }
+  try {
+    const harvest = await Harvest.findById(req.params.id);
+    if (!harvest) return res.status(404).json({ msg: 'Harvest not found' });
+    if (harvest.status !== 'Verified') {
+      return res.status(400).json({ msg: 'Only verified harvests can be collected.' });
+    }
+    harvest.collectedBy = req.user.id;
+    harvest.status = 'Collected';
+    await harvest.save();
+    res.json(harvest);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
 // controllers/harvestController.js
 const Harvest = require('../models/Harvest');
 const crypto = require('crypto'); 
@@ -34,9 +80,11 @@ exports.createHarvest = async (req, res) => {
       herbName,
       quantity: { value: Number(quantity), unit },
       location: {
-        description: location || '',
-        latitude: latitude || '',
-        longitude: longitude || ''
+        description: location?.description || location || '',
+        village: location?.village || '',
+        city: location?.city || '',
+        pincode: location?.pincode || '',
+        state: location?.state || ''
       },
       harvestDate,
       photoUrl: photoUrl || '',
@@ -159,7 +207,6 @@ exports.getVerifiedHarvests = async (req, res) => {
   try {
     const harvests = await Harvest.find({ status: 'Verified' })
       .populate('farmer', ['name', 'email'])
-      .populate('herb', 'name imageUrl')
       .sort({ createdAt: -1 });
     res.json(harvests);
   } catch (err) {

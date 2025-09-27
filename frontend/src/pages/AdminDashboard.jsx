@@ -136,9 +136,24 @@ const HarvestDetailModal = ({ harvest, onClose }) => {
           <div className="border-t dark:border-gray-700 pt-4 text-gray-700 dark:text-gray-300 space-y-2">
               <p><span className="font-semibold">Farmer:</span> {harvest.farmer?.name || 'Deleted User'} ({harvest.farmer?.email || 'N/A'})</p>
               <p><span className="font-semibold">Location:</span> {harvest.location?.description || 'N/A'}</p>
+              <p><span className="font-semibold">Village:</span> {harvest.location?.village || 'N/A'}</p>
+              <p><span className="font-semibold">City:</span> {harvest.location?.city || 'N/A'}</p>
+              <p><span className="font-semibold">Pincode:</span> {harvest.location?.pincode || 'N/A'}</p>
+              <p><span className="font-semibold">State:</span> {harvest.location?.state || 'N/A'}</p>
               <p><span className="font-semibold">Quantity:</span> {harvest.quantity?.value} {harvest.quantity?.unit}</p>
               <p><span className="font-semibold">Harvest Date:</span> {new Date(harvest.harvestDate).toLocaleDateString()}</p>
               <p><span className="font-semibold">Certifications:</span> {harvest.certifications?.join(', ') || 'None'}</p>
+              <p><span className="font-semibold">Additional Info:</span> {harvest.additionalInfo || 'None'}</p>
+              <p><span className="font-semibold">Manufacturer Update:</span> {harvest.manufacturerUpdate ? (
+                <span>
+                  <br />Processing: {harvest.manufacturerUpdate.processingDetails || 'N/A'}
+                  <br />Remarks: {harvest.manufacturerUpdate.remarks || 'N/A'}
+                  <br />Storage: {harvest.manufacturerUpdate.storageLocation || 'N/A'}
+                  <br />Batch No: {harvest.manufacturerUpdate.batchNumber || 'N/A'}
+                </span>
+              ) : 'None'}
+              </p>
+              <p><span className="font-semibold">Admin Remarks:</span> {harvest.adminRemarks || 'None'}</p>
           </div>
           <button onClick={onClose} className="w-full mt-4 py-2 font-semibold text-white bg-gray-500 rounded-lg hover:bg-gray-600 transition-colors">Close</button>
       </div>

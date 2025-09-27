@@ -8,7 +8,9 @@ const {
   getPendingHarvests,
   updateHarvestStatus,
   getVerifiedHarvests,
-  getHarvestById // Import the new controller function we'll create
+  getHarvestById,
+  collectHarvest,
+  updateManufacturerDetails
 } = require('../controllers/harvestController');
 
 // All routes here start with /api/harvests
@@ -25,6 +27,8 @@ router.get('/qr/:qrCode', getHarvestByQRCode);
 // --- Dynamic GET/PUT routes last ---
 router.get('/:id', auth, getHarvestById);
 router.put('/:id/status', auth, updateHarvestStatus);
+router.put('/:id/collect', auth, collectHarvest);
+router.put('/:id/manufacturer-update', auth, updateManufacturerDetails);
 
 // --- General POST route ---
 router.post('/', auth, createHarvest);
