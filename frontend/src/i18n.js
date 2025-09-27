@@ -1,25 +1,25 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
 
 i18n
+  .use(LanguageDetector)
   .use(initReactI18next)
   .init({
+    fallbackLng: 'en',
     resources: {
       en: {
         translation: {
-          // English translations
           "welcome": "Welcome Back",
           "signInTitle": "Sign in to access your dashboard.",
           "emailLabel": "Email Address",
           "passwordLabel": "Password",
           "signInButton": "Sign In",
-          "orContinueWith": "Or continue with",
           "noAccount": "Don't have an account?",
           "signUp": "Sign Up",
           "createAccount": "Create an Account",
           "createAccountTitle": "Join the future of transparent supply chains.",
           "nameLabel": "Full Name",
-          "roleLabel": "I am a",
           "farmer": "Farmer",
           "admin": "Admin",
           "signUpButton": "Create Account",
@@ -29,19 +29,16 @@ i18n
       },
       hi: {
         translation: {
-          // Hindi translations
           "welcome": "वापसी पर स्वागत है",
           "signInTitle": "अपने डैशबोर्ड तक पहुंचने के लिए साइन इन करें।",
           "emailLabel": "ईमेल पता",
           "passwordLabel": "पासवर्ड",
           "signInButton": "साइन इन करें",
-          "orContinueWith": "या इसके साथ जारी रखें",
           "noAccount": "खाता नहीं है?",
           "signUp": "साइन अप करें",
           "createAccount": "खाता बनाएं",
           "createAccountTitle": "पारदर्शी आपूर्ति श्रृंखलाओं के भविष्य में शामिल हों।",
           "nameLabel": "पूरा नाम",
-          "roleLabel": "मैं एक हूँ",
           "farmer": "किसान",
           "admin": "व्यवस्थापक",
           "signUpButton": "खाता बनाएं",
@@ -68,7 +65,6 @@ i18n
           "signIn": "ಸೈನ್ ಇನ್ ಮಾಡಿ"
         }
       },
-      // Add the new Malayalam translations
       ml: {
         translation: {
           "welcome": "വീണ്ടും സ്വാഗതം",
@@ -89,11 +85,13 @@ i18n
         }
       }
     },
-    lng: "en", // Default language
-    fallbackLng: "en",
     interpolation: {
       escapeValue: false
-    }
+    },
+    detection: {
+      order: ['localStorage', 'navigator'],
+      caches: ['localStorage'],
+    },
   });
 
 export default i18n;

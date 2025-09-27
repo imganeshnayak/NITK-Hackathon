@@ -32,7 +32,13 @@ const [showPassword, setShowPassword] = useState(false);
       const res = await api.post('/auth/login', { email, password });
       localStorage.setItem('token', res.data.token);
       const decoded = jwtDecode(res.data.token);
-      navigate(decoded.user.role === 'admin' ? '/admin' : '/farmer');
+if (decoded.user.role === 'admin') {
+  navigate('/admin');
+} else if (decoded.user.role === 'manufacturer') {
+  navigate('/manufacturer'); 
+} else {
+  navigate('/farmer');
+}
     } catch (err) {
       const errorMsg = err.response?.data?.msg || 'Login failed.';
       setError(errorMsg);

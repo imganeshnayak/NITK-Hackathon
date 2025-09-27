@@ -75,8 +75,14 @@ const handleSendOtp = async (e) => {
         try {
             const res = await api.post('/auth/verify-otp', { email, otp });
             localStorage.setItem('token', res.data.token);
-            const decoded = jwtDecode(res.data.token);
-            navigate(decoded.user.role === 'admin' ? '/admin' : '/farmer');
+           const decoded = jwtDecode(res.data.token);
+if (decoded.user.role === 'admin') {
+  navigate('/admin');
+} else if (decoded.user.role === 'manufacturer') {
+  navigate('/manufacturer'); 
+} else {
+  navigate('/farmer');
+}
         } catch (err) {
             setError(err.response?.data?.msg || 'Verification failed.');
         }
@@ -122,8 +128,9 @@ const handleSendOtp = async (e) => {
                             </div>
                             
                             <select id="role" value={role} onChange={onChange} className="w-full px-4 py-3 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-200 focus:border-green-500 focus:ring-green-500">
-                                <option value="farmer">{t('farmer')}</option>
-                                <option value="admin">{t('admin')}</option>
+                                 <option value="farmer">{t('farmer')}</option>
+                                 <option value="manufacturer">I am a Manufacturer</option>
+                                 <option value="admin">{t('admin')}</option>
                             </select>
                             <button type="submit" className="w-full py-3 font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors">
                                 Send Verification Code

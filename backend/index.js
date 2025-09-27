@@ -18,7 +18,7 @@ mongoose.connect(process.env.MONGO_URI)
 // --- Routes ---
 // We will create this file next
 app.use('/api/auth', require('./routes/auth'));
-app.use('/api/batches', require('./routes/batches')); 
+app.use('/api/harvests', require('./routes/harvests')); 
 
 // --- Server Start ---
 const PORT = process.env.PORT || 5000;
