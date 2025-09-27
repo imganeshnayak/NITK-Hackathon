@@ -5,28 +5,24 @@ const auth = require('../middleware/auth');
 const {
   createHarvest,
   getFarmerHarvests,
-  getHarvestById,
   getPendingHarvests,
   updateHarvestStatus,
   getVerifiedHarvests,
-  getHarvestByQRCode
+  getHarvestById // Import the new controller function we'll create
 } = require('../controllers/harvestController');
 
 // All routes here are protected and start with /api/harvests
 
-// Farmer routes
-router.post('/', auth, createHarvest);
+// --- Static routes first ---
 router.get('/myharvests', auth, getFarmerHarvests);
-router.get('/:id', auth, getHarvestById);
-
-// Admin routes
 router.get('/pending', auth, getPendingHarvests);
-router.put('/:id/status', auth, updateHarvestStatus);
-
-// Manufacturer (& Admin) routes
 router.get('/verified', auth, getVerifiedHarvests);
 
-// Public route for QR code verification
-router.get('/qr/:qrCode', getHarvestByQRCode);
+// --- Dynamic routes last ---
+router.get('/:id', auth, getHarvestById); // New route to get a single harvest by its ID
+router.put('/:id/status', auth, updateHarvestStatus);
+
+// --- General routes ---
+router.post('/', auth, createHarvest);
 
 module.exports = router;

@@ -7,14 +7,13 @@ const HarvestSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  // This now links directly to your Herb model
   herb: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Herb',
     required: true,
   },
-  herbName: { 
-    type: String, 
-    required: true 
-  },
+  // We can remove the redundant 'herbName' field
   location: {
     description: { type: String },
     latitude: { type: String },
@@ -28,19 +27,7 @@ const HarvestSchema = new mongoose.Schema({
     type: Date, 
     required: true 
   },
-  photoUrl: { 
-    type: String 
-  },
-  certifications: [{
-    type: String,
-    enum: ['Organic', 'Fair Trade', 'Non-GMO', 'Vegan', 'Sustainable', 'Traditional']
-  }],
-  additionalInfo: {
-    type: String
-  },
-  qrCodeData: {
-    type: String
-  },
+  // ... rest of the schema is the same
   status: {
     type: String,
     enum: ['Pending Verification', 'Verified', 'Rejected', 'Sold'],
