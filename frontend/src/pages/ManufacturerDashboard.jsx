@@ -1,39 +1,47 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { QRCodeSVG } from 'qrcode.react';
 import api from '../api';
 
 function ManufacturerDashboard() {
+  // ...existing code...
+  const [qrModal, setQrModal] = useState({ open: false, harvest: null });
   const [harvests, setHarvests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedHarvest, setSelectedHarvest] = useState(null);
+  const [tab, setTab] = useState('Verified'); // Tabs: Verified, Collected, All
 
   const manufacturerDashboardTitle = "Manufacturer Dashboard";
-  const manufacturerDashboardSubtitle = "View and manage all verified harvests";
+  const manufacturerDashboardSubtitle = "View and manage all batches";
   const searchPlaceholder = "Search herbs by name...";
 
   useEffect(() => {
-    const fetchVerifiedHarvests = async () => {
+    const fetchHarvests = async () => {
       try {
         setLoading(true);
+        // Get all batches for manufacturer (Verified + Collected)
         const res = await api.get('/harvests/verified');
         setHarvests(res.data);
       } catch (err) {
         console.error(err);
-        setError('Failed to fetch verified harvests.');
+        setError('Failed to fetch harvests.');
       } finally {
         setLoading(false);
       }
     };
-    fetchVerifiedHarvests();
+    fetchHarvests();
   }, []);
 
   // Add state for update modal
   const [updateModal, setUpdateModal] = useState({ open: false, harvest: null });
   const filteredHarvests = useMemo(() => {
     if (!harvests) return [];
-    return harvests.filter(h => (h.herbName || '').toLowerCase().includes(searchTerm.toLowerCase()));
-  }, [harvests, searchTerm]);
+    let filtered = harvests.filter(h => (h.herbName || '').toLowerCase().includes(searchTerm.toLowerCase()));
+    if (tab === 'Verified') return filtered.filter(h => h.status === 'Verified');
+    if (tab === 'Collected') return filtered.filter(h => h.status === 'Collected');
+    return filtered; // All
+  }, [harvests, searchTerm, tab]);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -41,6 +49,19 @@ function ManufacturerDashboard() {
         <div className="mb-8 text-center sm:text-left">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white">{manufacturerDashboardTitle}</h1>
           <p className="mt-1 text-gray-600 dark:text-gray-400">{manufacturerDashboardSubtitle}</p>
+        </div>
+
+        {/* Tabs for status filter */}
+        <div className="mb-6 flex gap-2 justify-center sm:justify-start">
+          {['Verified', 'Collected', 'All'].map(t => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`px-4 py-2 rounded-lg font-semibold border transition-colors ${tab === t ? 'bg-green-600 text-white border-green-700' : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-gray-600 hover:bg-green-100 dark:hover:bg-green-900'}`}
+            >
+              {t}
+            </button>
+          ))}
         </div>
 
         <div className="mb-6 relative w-full max-w-lg mx-auto sm:mx-0">
@@ -109,15 +130,35 @@ function ManufacturerDashboard() {
                           </button>
                         )}
                         {h.status === 'Collected' && (
-                          <button
-                            onClick={() => setUpdateModal({ open: true, harvest: h })}
-                            className="py-1 px-3 font-semibold text-white bg-yellow-600 rounded hover:bg-yellow-700 transition-colors text-sm"
-                          >
-                            Update Processing
-                          </button>
+                          <>
+                            <button
+                              onClick={() => setUpdateModal({ open: true, harvest: h })}
+                              className="py-1 px-3 font-semibold text-white bg-yellow-600 rounded hover:bg-yellow-700 transition-colors text-sm"
+                            >
+                              Update Processing
+                            </button>
+                            <button
+                              onClick={() => setQrModal({ open: true, harvest: h })}
+                              className="py-1 px-3 font-semibold text-white bg-purple-600 rounded hover:bg-purple-700 transition-colors text-sm"
+                            >
+                              QR Code
+                            </button>
+                          </>
                         )}
-                      {/* ...existing code... */}
                       </td>
+      {/* QR Code Modal */}
+      {qrModal.open && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setQrModal({ open: false, harvest: null })}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-lg p-6" onClick={e => e.stopPropagation()}>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Batch QR Code</h2>
+            <div className="flex flex-col items-center gap-4">
+              <QRCodeSVG value={`http://10.213.224.200:5173/batch/${qrModal.harvest?._id}`} size={200} />
+              <p className="text-gray-700 dark:text-gray-300 text-center">Scan to view batch details and all recorded steps.</p>
+              <button type="button" onClick={() => setQrModal({ open: false, harvest: null })} className="py-2 px-4 font-semibold text-white bg-gray-500 rounded hover:bg-gray-600 transition-colors">Close</button>
+            </div>
+          </div>
+        </div>
+      )}
                     </tr>
                   ))}
                 </tbody>
@@ -134,10 +175,8 @@ function ManufacturerDashboard() {
         <UpdateProcessingModal
           harvest={updateModal.harvest}
           onClose={() => setUpdateModal({ open: false, harvest: null })}
-          onUpdated={async () => {
-            // Refetch harvests after update
-            const res = await api.get('/harvests/verified');
-            setHarvests(res.data);
+          onUpdated={(updatedHarvest) => {
+            setHarvests(prev => prev.map(h => h._id === updatedHarvest._id ? updatedHarvest : h));
             setUpdateModal({ open: false, harvest: null });
           }}
         />
@@ -178,13 +217,28 @@ const HarvestDetailModal = ({ harvest, onClose }) => {
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-2xl p-6 overflow-y-auto max-h-[90vh]" onClick={e => e.stopPropagation()}>
   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{harvest.herbName || 'Unknown Herb'}</h2>
 
-        {/* Only show essential details */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700 dark:text-gray-300">
           <p><span className="font-semibold">Farmer:</span> {harvest.farmer?.name || 'Deleted User'}</p>
+          <p><span className="font-semibold">Location:</span> {harvest.location?.description || 'N/A'}</p>
+          <p><span className="font-semibold">Village:</span> {harvest.location?.village || 'N/A'}</p>
+          <p><span className="font-semibold">City:</span> {harvest.location?.city || 'N/A'}</p>
+          <p><span className="font-semibold">Pincode:</span> {harvest.location?.pincode || 'N/A'}</p>
+          <p><span className="font-semibold">State:</span> {harvest.location?.state || 'N/A'}</p>
           <p><span className="font-semibold">Quantity:</span> {harvest.quantity?.value} {harvest.quantity?.unit}</p>
           <p><span className="font-semibold">Status:</span> {harvest.status}</p>
           <p><span className="font-semibold">Harvest Date:</span> {new Date(harvest.harvestDate).toLocaleDateString()}</p>
-          <p><span className="font-semibold">Location:</span> {harvest.location?.description}</p>
+          <p><span className="font-semibold">Certifications:</span> {harvest.certifications?.join(', ') || 'None'}</p>
+          <p><span className="font-semibold">Additional Info:</span> {harvest.additionalInfo || 'None'}</p>
+          <p><span className="font-semibold">Manufacturer Update:</span> {harvest.manufacturerUpdate ? (
+            <span>
+              <br />Processing: {harvest.manufacturerUpdate.processingDetails || 'N/A'}
+              <br />Remarks: {harvest.manufacturerUpdate.remarks || 'N/A'}
+              <br />Storage: {harvest.manufacturerUpdate.storageLocation || 'N/A'}
+              <br />Batch No: {harvest.manufacturerUpdate.batchNumber || 'N/A'}
+            </span>
+          ) : 'None'}
+          </p>
+          <p><span className="font-semibold">Admin Remarks:</span> {harvest.adminRemarks || 'None'}</p>
         </div>
 
         <button onClick={onClose} className="mt-6 w-full py-2 font-semibold text-white bg-gray-500 rounded-lg hover:bg-gray-600 transition-colors">
@@ -207,13 +261,13 @@ function UpdateProcessingModal({ harvest, onClose, onUpdated }) {
     e.preventDefault();
     setLoading(true);
     try {
-      await api.put(`/harvests/${harvest._id}/manufacturer-update`, {
+      const res = await api.put(`/harvests/${harvest._id}/manufacturer-update`, {
         processingDetails,
         remarks,
         storageLocation,
         batchNumber
       });
-      await onUpdated();
+      onUpdated(res.data);
     } catch (err) {
       alert('Failed to update processing details.');
     } finally {

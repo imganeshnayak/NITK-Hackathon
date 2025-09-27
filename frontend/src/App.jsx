@@ -10,6 +10,7 @@ import FarmerProfile from './pages/FarmerProfile';
 import AdminDashboard from './pages/AdminDashboard';
 import ConsumerPortal from './pages/ConsumerPortal';
 import ManufacturerDashboard from './pages/ManufacturerDashboard';
+import BatchDetailPage from './pages/BatchDetailPage';
 import HerbSelectionPage from './pages/HerbSelectionPage';
 import BatchRegistrationPage from './pages/BatchRegistrationPage';
 
@@ -37,6 +38,8 @@ function App() {
           {/* Batch registration flow */}
           <Route path="/herb-selection" element={<HerbSelectionPage />} />
           <Route path="/batch-registration" element={<BatchRegistrationPage />} />
+          {/* Batch detail page for QR code scan */}
+          <Route path="/batch/:id" element={<BatchDetailPage />} />
         </Route>
       </Routes>
     </div>
