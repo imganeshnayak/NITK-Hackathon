@@ -8,7 +8,7 @@ exports.createHarvest = async (req, res) => {
   console.log('Request body:', req.body);
   try {
     const {
-        herbId, // Correct variable name
+      herbName,
       quantity,
       unit = 'kg',
       harvestDate,
@@ -24,17 +24,14 @@ exports.createHarvest = async (req, res) => {
     if (!req.user || !req.user.id) {
       return res.status(401).json({ msg: 'Unauthorized: User not found in request' });
     }
-      if (!herbId) return res.status(400).json({ msg: 'Herb ID is required' });
-      if (!mongoose.Types.ObjectId.isValid(herbId)) {
-        return res.status(400).json({ msg: 'Invalid herb ObjectId. Must be a 24-character hex string.' });
-      }
+      if (!herbName) return res.status(400).json({ msg: 'Herb name is required' });
       if (!quantity || isNaN(quantity)) return res.status(400).json({ msg: 'Quantity is required and must be a number' });
       if (!harvestDate) return res.status(400).json({ msg: 'Harvest date is required' });
 
     // --- Map frontend data to schema ---
     const newHarvest = new Harvest({
       farmer: req.user.id,
-       herb: herbId, // Correct variable name
+      herbName,
       quantity: { value: Number(quantity), unit },
       location: {
         description: location || '',
@@ -62,8 +59,7 @@ exports.createHarvest = async (req, res) => {
 exports.getFarmerHarvests = async (req, res) => {
   try {
     const harvests = await Harvest.find({ farmer: req.user.id })
-      .sort({ createdAt: -1 })
-      .populate('herb', 'name imageUrl'); // This will now work correctly
+      .sort({ createdAt: -1 });
     res.json(harvests);
   } catch (err) {
     console.error(err.message);
@@ -79,7 +75,6 @@ exports.getVerifiedHarvests = async (req, res) => {
   try {
     const harvests = await Harvest.find({ status: 'Verified' })
       .populate('farmer', 'name')
-      .populate('herb', 'name') // This will now work correctly
       .sort({ createdAt: -1 });
     res.json(harvests);
   } catch (err) {
@@ -91,8 +86,7 @@ exports.getVerifiedHarvests = async (req, res) => {
 exports.getHarvestById = async (req, res) => {
   try {
     const harvest = await Harvest.findById(req.params.id)
-      .populate('farmer', 'name email')
-      .populate('herb', 'name botanicalName description imageUrl');
+      .populate('farmer', 'name email');
     
     if (!harvest) {
       return res.status(404).json({ msg: 'Harvest not found' });

@@ -136,8 +136,7 @@ function BatchRegistrationPage() {
   try {
     // Prepare API payload
     const harvestData = {
-      herbId: selectedHerb._id,       // Must be ObjectId from MongoDB
-      herbName: formData.herbName,    // Optional for display
+      herbName: formData.herbName,    // Only send herb name
       quantity: parseFloat(formData.quantity),
       unit: formData.unit,
       harvestDate: formData.harvestDate,

@@ -7,9 +7,8 @@ const HarvestSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-  herb: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Herb',
+  herbName: {
+    type: String,
     required: true,
   },
   // The separate 'herbName' field is no longer needed
