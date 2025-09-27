@@ -17,7 +17,7 @@ function HomePage() {
         <button className="py-3 px-6 font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors">
           Track Harvest
         </button>
-      </div>
+      </div> 
     </div>
   );
 }

@@ -7,14 +7,13 @@ const HarvestSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  // --- FIX: This now correctly links to the Herb model ---
   herb: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Herb',
     required: true,
   },
-  herbName: { 
-    type: String, 
-    required: true 
-  },
+  // The separate 'herbName' field is no longer needed
   location: {
     description: { type: String },
     latitude: { type: String },
@@ -46,6 +45,9 @@ const HarvestSchema = new mongoose.Schema({
     enum: ['Pending Verification', 'Verified', 'Rejected', 'Sold'],
     default: 'Pending Verification',
   },
+  adminRemarks: {
+    type: String
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Harvest', HarvestSchema);

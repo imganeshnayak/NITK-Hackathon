@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../api';
-
+    
 function BatchRegistrationPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -126,47 +126,50 @@ function BatchRegistrationPage() {
     return Object.keys(newErrors).length === 0;
   };
   
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
-    
-    setLoading(true);
-    
-    try {
-      // Prepare the data for API submission
-      const harvestData = {
-        herbId: selectedHerb._id,
-        herbName: formData.herbName,
-        quantity: parseFloat(formData.quantity),
-        unit: formData.unit,
-        harvestDate: formData.harvestDate,
-        location: formData.location,
-        latitude: formData.latitude,
-        longitude: formData.longitude,
-        certifications: formData.certifications,
-        additionalInfo: formData.additionalInfo,
-        photoUrl: image // Base64 image data
-      };
-      
-      // Submit to API
-      const response = await api.post('/harvests', harvestData);
-      
-      setSuccess(true);
-      setTimeout(() => {
-        navigate('/farmer');
-      }, 2000);
-      
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      alert('Failed to submit harvest data. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-  
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!validateForm()) return;
+
+  setLoading(true);
+
+  try {
+    // Prepare API payload
+    const harvestData = {
+      herbId: selectedHerb._id,       // Must be ObjectId from MongoDB
+      herbName: formData.herbName,    // Optional for display
+      quantity: parseFloat(formData.quantity),
+      unit: formData.unit,
+      harvestDate: formData.harvestDate,
+      location: formData.location,
+      latitude: formData.latitude,
+      longitude: formData.longitude,
+      certifications: formData.certifications,
+      additionalInfo: formData.additionalInfo,
+      photoUrl: image                  // Base64 image
+    };
+
+    const response = await api.post('/harvests', harvestData);
+
+    console.log('Harvest created:', response.data);
+    setSuccess(true);
+
+    // Redirect after success
+    setTimeout(() => {
+      navigate('/farmer');
+    }, 2000);
+
+  } catch (error) {
+    console.error('Error submitting form:', error);
+    alert(
+      error.response?.data?.message ||
+      'Failed to submit harvest data. Please try again.'
+    );
+  } finally {
+    setLoading(false);
+  }
+};
+
   if (!selectedHerb) {
     return (
       <div className="min-h-screen bg-gray-900 text-white p-6">
