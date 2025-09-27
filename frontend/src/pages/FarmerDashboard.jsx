@@ -93,50 +93,17 @@ function FarmerDashboard() {
 
       </div>
 
-      {/* Mobile Top Nav - HerbChain header removed for mobile view */}
-      <div className="md:hidden flex items-center justify-end p-4 border-b border-gray-800 bg-gray-900 sticky top-0 z-40">
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="text-gray-300 focus:outline-none"
-        >
-          {mobileMenuOpen ? (
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          ) : (
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          )}
-        </button>
-      </div>
+    {/* Mobile Top Nav */}
+<div className="md:hidden flex items-center justify-between p-4 border-b border-gray-800 bg-gray-900 sticky top-0 z-40">
+  <h1 className="text-xl font-bold text-green-400">HerbChain</h1>
+  <button
+    onClick={handleNewBatch}
+    className="py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
+  >
+    + New Batch
+  </button>
+</div>
 
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-gray-900 border-b border-gray-800 p-4 space-y-3">
-          <button
-            onClick={handleNewBatch}
-            className="flex items-center w-full p-3 bg-green-600 text-white rounded-lg"
-          >
-            + New Batch
-          </button>
-        </div>
-      )}
 
       {/* Main Content */}
       <main className="flex-1 md:ml-64 p-4 md:p-8">
