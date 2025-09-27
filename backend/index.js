@@ -16,9 +16,9 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.error('MongoDB connection error:', err));
 
 // --- Routes ---
-// We will create this file next
 app.use('/api/auth', require('./routes/auth'));
-app.use('/api/harvests', require('./routes/harvests')); 
+app.use('/api/harvests', require('./routes/harvests'));
+app.use('/api/herbs', require('./routes/herbs')); 
 
 // --- Server Start ---
 const PORT = process.env.PORT || 5000;

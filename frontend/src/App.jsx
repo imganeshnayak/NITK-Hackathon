@@ -9,6 +9,8 @@ import FarmerDashboard from './pages/FarmerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import ConsumerPortal from './pages/ConsumerPortal';
 import ManufacturerDashboard from './pages/ManufacturerDashboard';
+import HerbSelectionPage from './pages/HerbSelectionPage';
+import BatchRegistrationPage from './pages/BatchRegistrationPage';
 
 function App() {
   return (
@@ -28,7 +30,11 @@ function App() {
           {/* Route for QR Code scanning */}
           <Route path="/verify/:batchId" element={<ConsumerPortal />} />
           
-         <Route path="/manufacturer" element={<ManufacturerDashboard />} /> 
+          <Route path="/manufacturer" element={<ManufacturerDashboard />} /> 
+          
+          {/* Batch registration flow */}
+          <Route path="/herb-selection" element={<HerbSelectionPage />} />
+          <Route path="/batch-registration" element={<BatchRegistrationPage />} />
         </Route>
       </Routes>
     </div>

@@ -7,34 +7,45 @@ const HarvestSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-  location: {
-    geoCoordinates: { type: String, required: true },
-    village: { type: String, required: true },
-    state: { type: String, required: true },
-  },
   herb: {
-    commonName: { type: String, required: true },
-    botanicalName: { type: String },
-    partUsed: { type: String },
-    quantityKg: { type: Number, required: true },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Herb',
+    required: true,
   },
-  harvest: {
-    date: { type: Date, required: true },
-    method: { type: String },
+  herbName: { 
+    type: String, 
+    required: true 
   },
-  initialQuality: {
-    moisturePercent: { type: Number },
-    grading: { type: String },
-    photoUrl: { type: String },
+  location: {
+    description: { type: String },
+    latitude: { type: String },
+    longitude: { type: String },
   },
-  sustainability: {
-    organicCertified: { type: Boolean, default: false },
-    fairTrade: { type: Boolean, default: false },
+  quantity: { 
+    value: { type: Number, required: true },
+    unit: { type: String, default: 'kg', enum: ['kg', 'g', 'lb'] }
+  },
+  harvestDate: { 
+    type: Date, 
+    required: true 
+  },
+  photoUrl: { 
+    type: String 
+  },
+  certifications: [{
+    type: String,
+    enum: ['Organic', 'Fair Trade', 'Non-GMO', 'Vegan', 'Sustainable', 'Traditional']
+  }],
+  additionalInfo: {
+    type: String
+  },
+  qrCodeData: {
+    type: String
   },
   status: {
     type: String,
-    enum: ['PendingVerification', 'Verified', 'Sold'],
-    default: 'PendingVerification',
+    enum: ['Pending Verification', 'Verified', 'Rejected', 'Sold'],
+    default: 'Pending Verification',
   },
 }, { timestamps: true });
 
