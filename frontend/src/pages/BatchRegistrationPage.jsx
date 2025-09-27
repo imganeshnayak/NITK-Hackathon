@@ -204,18 +204,37 @@ function BatchRegistrationPage() {
       <div className="max-w-3xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
         <h1 className="text-2xl font-bold mb-6">Register New Herb Batch</h1>
         
-        <div className="mb-6 flex items-center bg-gray-700 p-4 rounded-lg">
-          {selectedHerb?.imageUrl && (
-            <img 
-              src={selectedHerb.imageUrl} 
-              alt={selectedHerb.name} 
-              className="w-16 h-16 object-cover rounded-lg mr-4"
-            />
-          )}
-          <div>
-            <h2 className="font-semibold text-lg">{selectedHerb?.name}</h2>
-            <p className="text-gray-300 text-sm">Selected herb for batch registration</p>
+        <div className="mb-6 bg-gray-700 p-5 rounded-lg border-l-4 border-green-500 shadow-lg">
+          <div className="flex items-center mb-4">
+            {selectedHerb?.imageUrl && (
+              <img 
+                src={selectedHerb.imageUrl} 
+                alt={selectedHerb.name} 
+                className="w-20 h-20 object-cover rounded-lg mr-4"
+                onError={(e) => {
+                  e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjM0Y0QTU1Ii8+CjxwYXRoIGQ9Ik01MCAzMEM1My4zMTM3IDMwIDU2IDMyLjY4NjMgNTYgMzZDNTYgMzkuMzEzNyA1My4zMTM3IDQyIDUwIDQyQzQ2LjY4NjMgNDIgNDQgMzkuMzEzNyA0NCAzNkM0NCAzMi42ODYzIDQ2LjY4NjMgMzAgNTAgMzBaTTY2IDY2VjYwQzY2IDU2LjY4NjMgNjMuMzEzNyA1NCA2MCA1NEg0MEMzNi42ODYzIDU0IDM0IDU2LjY4NjMgMzQgNjBWNjZIMzZWNjBINjRWNjZINjZaIiBmaWxsPSIjMDk4NTU0Ii8+Cjwvc3ZnPgo=';
+                }}
+              />
+            )}
+            <div>
+              <h2 className="font-bold text-xl text-green-400">{selectedHerb?.name}</h2>
+              {selectedHerb?.sanskritName && (
+                <p className="text-gray-300 text-sm mb-1">{selectedHerb.sanskritName} (Sanskrit)</p>
+              )}
+              <div className="flex items-center mt-1">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-500 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span className="text-gray-300 text-sm">Selected for batch registration</span>
+              </div>
+            </div>
           </div>
+          {selectedHerb?.description && (
+            <div className="mt-2 text-sm text-gray-300 bg-gray-800 p-3 rounded-lg">
+              <span className="block font-medium text-white mb-1">About this herb:</span>
+              {selectedHerb.description}
+            </div>
+          )}
         </div>
         
         <form onSubmit={handleSubmit}>
