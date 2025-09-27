@@ -1,67 +1,65 @@
 // controllers/harvestController.js
 const Harvest = require('../models/Harvest');
-const Herb = require('../models/Herb');
-const crypto = require('crypto');
+const crypto = require('crypto'); 
 
-// Create a new harvest record (for farmers)
 exports.createHarvest = async (req, res) => {
-  // Destructure all the fields from the request body
-  const {
-    herbId,
-    herbName,
-    quantity,
-    unit,
-    harvestDate,
-    location,
-    latitude,
-    longitude,
-    certifications,
-    additionalInfo,
-    photoUrl
-  } = req.body;
-
+   console.log('User payload:', req.user);  
+  console.log('Request body:', req.body);
   try {
-    // Generate a unique QR code data
-    const qrCodeData = crypto.randomBytes(16).toString('hex');
-    
-    // Create a new harvest object
-    const newHarvest = new Harvest({
-      farmer: req.user.id, // from auth middleware
-      herb: herbId,
-      herbName,
-      location: {
-        description: location,
-        latitude,
-        longitude
-      },
-      quantity: {
-        value: quantity,
-        unit: unit || 'kg'
-      },
+    const {
+      herbId,
+      quantity,
+      unit = 'kg',
       harvestDate,
-      photoUrl,
+      location,
+      latitude,
+      longitude,
       certifications,
       additionalInfo,
-      qrCodeData,
-      status: 'Pending Verification'
+      photoUrl
+    } = req.body;
+
+    // --- Basic validation ---
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ msg: 'Unauthorized: User not found in request' });
+    }
+    if (!herbId) return res.status(400).json({ msg: 'Herb ID is required' });
+    if (!quantity || isNaN(quantity)) return res.status(400).json({ msg: 'Quantity is required and must be a number' });
+    if (!harvestDate) return res.status(400).json({ msg: 'Harvest date is required' });
+
+    // --- Map frontend data to schema ---
+    const newHarvest = new Harvest({
+      farmer: req.user.id,
+      herb: herbId,
+      quantity: { value: Number(quantity), unit },
+      location: {
+        description: location || '',
+        latitude: latitude || '',
+        longitude: longitude || ''
+      },
+      harvestDate,
+      photoUrl: photoUrl || '',
+      certifications: Array.isArray(certifications) ? certifications : [],
+      additionalInfo: additionalInfo || '',
+      qrCodeData: crypto.randomBytes(16).toString('hex')
     });
 
     const savedHarvest = await newHarvest.save();
-    
-    // Return the saved harvest with QR code data
-    res.json(savedHarvest);
+    res.status(201).json(savedHarvest);
+
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    console.error('Harvest creation error:', err);
+    res.status(500).json({ msg: 'Server Error', error: err.message });
   }
 };
+
 
 // Get all harvests for the currently logged-in farmer
 exports.getFarmerHarvests = async (req, res) => {
   try {
     const harvests = await Harvest.find({ farmer: req.user.id })
       .sort({ createdAt: -1 })
-      .populate('herb', 'name imageUrl');
+      .populate('herb', 'name imageUrl'); // This will now work correctly
     res.json(harvests);
   } catch (err) {
     console.error(err.message);
@@ -69,6 +67,22 @@ exports.getFarmerHarvests = async (req, res) => {
   }
 };
 
+// Get all VERIFIED harvests (for manufacturers)
+exports.getVerifiedHarvests = async (req, res) => {
+  if (req.user.role !== 'manufacturer' && req.user.role !== 'admin') {
+      return res.status(403).json({ msg: 'Access denied.' });
+  }
+  try {
+    const harvests = await Harvest.find({ status: 'Verified' })
+      .populate('farmer', 'name')
+      .populate('herb', 'name') // This will now work correctly
+      .sort({ createdAt: -1 });
+    res.json(harvests);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
 // Get a single harvest by ID
 exports.getHarvestById = async (req, res) => {
   try {

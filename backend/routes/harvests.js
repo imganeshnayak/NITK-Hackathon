@@ -11,18 +11,21 @@ const {
   getHarvestById // Import the new controller function we'll create
 } = require('../controllers/harvestController');
 
-// All routes here are protected and start with /api/harvests
+// All routes here start with /api/harvests
 
-// --- Static routes first ---
+// --- Static GET routes first ---
 router.get('/myharvests', auth, getFarmerHarvests);
 router.get('/pending', auth, getPendingHarvests);
 router.get('/verified', auth, getVerifiedHarvests);
 
-// --- Dynamic routes last ---
-router.get('/:id', auth, getHarvestById); // New route to get a single harvest by its ID
+// --- Public route for QR code ---
+router.get('/qr/:qrCode', getHarvestByQRCode);
+
+// --- Dynamic GET/PUT routes last ---
+router.get('/:id', auth, getHarvestById);
 router.put('/:id/status', auth, updateHarvestStatus);
 
-// --- General routes ---
+// --- General POST route ---
 router.post('/', auth, createHarvest);
 
 module.exports = router;
