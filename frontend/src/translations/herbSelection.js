@@ -1,0 +1,62 @@
+export const herbSelectionTranslations = {
+  en: {
+    "pageTitle": "Ayurvedic Herb Library",
+    "pageSubtitle": "Select the herb you harvested to register a new batch",
+    "backToDashboard": "Back to Dashboard",
+    "searchPlaceholder": "Search herbs by name, description, or benefits...",
+    "filterHeader": "Filter by Category",
+    "allHerbs": "All Herbs",
+    "categoryLabel": "Category",
+    "selectHerbButton": "Select Herb",
+    "sanskritName": "Sanskrit Name",
+    "noHerbsTitle": "No Herbs Available",
+    "noHerbsSubtitle": "Unable to load herb data. Please check your connection.",
+    "tryAgainButton": "Try Again",
+    "footerStatus": "Showing {{count}} of {{total}} Ayurvedic herbs • Traditional medicinal plants for holistic wellness"
+  },
+  hi: {
+    "pageTitle": "आयुर्वेदिक जड़ी-बूटी पुस्तकालय",
+    "pageSubtitle": "नया बैच पंजीकृत करने के लिए अपनी काटी हुई जड़ी-बूटी का चयन करें",
+    "backToDashboard": "डैशबोर्ड पर वापस जाएं",
+    "searchPlaceholder": "नाम, विवरण, या लाभों के आधार पर जड़ी-बूटियाँ खोजें...",
+    "filterHeader": "श्रेणी के अनुसार फ़िल्टर करें",
+    "allHerbs": "सभी जड़ी-बूटियाँ",
+    "categoryLabel": "श्रेणी",
+    "selectHerbButton": "जड़ी-बूटी चुनें",
+    "sanskritName": "संस्कृत नाम",
+    "noHerbsTitle": "कोई जड़ी-बूटी उपलब्ध नहीं है",
+    "noHerbsSubtitle": "जड़ी-बूटी डेटा लोड करने में असमर्थ। कृपया अपना कनेक्शन जांचें।",
+    "tryAgainButton": "पुनः प्रयास करें",
+    "footerStatus": "{{total}} में से {{count}} आयुर्वेदिक जड़ी-बूटियाँ दिखाई जा रही हैं • समग्र कल्याण के लिए पारंपरिक औषधीय पौधे"
+  },
+  kn: {
+    "pageTitle": "ಆಯುರ್ವೇದ ಗಿಡಮೂಲಿಕೆ ಗ್ರಂಥಾಲಯ",
+    "pageSubtitle": "ಹೊಸ ಬ್ಯಾಚ್ ನೋಂದಾಯಿಸಲು ನೀವು ಕೊಯ್ಲು ಮಾಡಿದ ಗಿಡಮೂಲಿಕೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+    "backToDashboard": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಹಿಂತಿರುಗಿ",
+    "searchPlaceholder": "ಹೆಸರು, ವಿವರಣೆ, ಅಥವಾ ಪ್ರಯೋಜನಗಳ ಮೂಲಕ ಗಿಡಮೂಲಿಕೆಗಳನ್ನು ಹುಡುಕಿ...",
+    "filterHeader": "ವರ್ಗದ ಪ್ರಕಾರ ಫಿಲ್ಟರ್ ಮಾಡಿ",
+    "allHerbs": "ಎಲ್ಲಾ ಗಿಡಮೂಲಿಕೆಗಳು",
+    "categoryLabel": "ವರ್ಗ",
+    "selectHerbButton": "ಗಿಡಮೂಲಿಕೆ ಆಯ್ಕೆಮಾಡಿ",
+    "sanskritName": "ಸಂಸ್ಕೃತ ಹೆಸರು",
+    "noHerbsTitle": "ಯಾವುದೇ ಗಿಡಮೂಲಿಕೆಗಳು ಲಭ್ಯವಿಲ್ಲ",
+    "noHerbsSubtitle": "ಗಿಡಮೂಲಿಕೆ ಡೇಟಾವನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ.",
+    "tryAgainButton": "ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ",
+    "footerStatus": "{{total}} ರಲ್ಲಿ {{count}} ಆಯುರ್ವೇದ ಗಿಡಮೂಲಿಕೆಗಳನ್ನು ತೋರಿಸಲಾಗುತ್ತಿದೆ • ಸಮಗ್ರ ಸ್ವಾಸ್ಥ್ಯಕ್ಕಾಗಿ ಸಾಂಪ್ರದಾಯಿಕ ಔಷಧೀಯ ಸಸ್ಯಗಳು"
+  },
+  ml: {
+    "pageTitle": "ആയുർവേദ സസ്യ ലൈബ്രറി",
+    "pageSubtitle": "ഒരു പുതിയ ബാച്ച് രജിസ്റ്റർ ചെയ്യാൻ നിങ്ങൾ വിളവെടുത്ത സസ്യം തിരഞ്ഞെടുക്കുക",
+    "backToDashboard": "ഡാഷ്‌ബോർഡിലേക്ക് മടങ്ങുക",
+    "searchPlaceholder": "പേര്, വിവരണം, അല്ലെങ്കിൽ പ്രയോജനങ്ങൾ അനുസരിച്ച് സസ്യങ്ങൾക്കായി തിരയുക...",
+    "filterHeader": "വിഭാഗം അനുസരിച്ച് ഫിൽട്ടർ ചെയ്യുക",
+    "allHerbs": "എല്ലാ സസ്യങ്ങളും",
+    "categoryLabel": "വിഭാഗം",
+    "selectHerbButton": "സസ്യം തിരഞ്ഞെടുക്കുക",
+    "sanskritName": "സംസ്കൃത നാമം",
+    "noHerbsTitle": "സസ്യങ്ങളൊന്നും ലഭ്യമല്ല",
+    "noHerbsSubtitle": "സസ്യ ഡാറ്റ ലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല. ദയവായി നിങ്ങളുടെ കണക്ഷൻ പരിശോധിക്കുക.",
+    "tryAgainButton": "വീണ്ടും ശ്രമിക്കുക",
+    "footerStatus": "{{total}}-ൽ {{count}} ആയുർവേദ സസ്യങ്ങൾ കാണിക്കുന്നു • സമഗ്രമായ ആരോഗ്യത്തിനായുള്ള പരമ്പരാഗത ഔഷധ സസ്യങ്ങൾ"
+  }
+};
