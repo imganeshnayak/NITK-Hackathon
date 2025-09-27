@@ -7,7 +7,6 @@ const HarvestSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-  // --- FIX: This now correctly links to the Herb model ---
   herb: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Herb',
