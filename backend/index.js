@@ -18,7 +18,8 @@ mongoose.connect(process.env.MONGO_URI)
 // --- Routes ---
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/harvests', require('./routes/harvests'));
-app.use('/api/herbs', require('./routes/herbs')); 
+app.use('/api/herbs', require('./routes/herbs'));
+app.use('/api/farmer', require('./routes/farmerProfile'));
 
 // --- Server Start ---
 const PORT = process.env.PORT || 5000;

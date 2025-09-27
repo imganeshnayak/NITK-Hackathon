@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import FarmerDashboard from './pages/FarmerDashboard';
+import FarmerProfile from './pages/FarmerProfile';
 import AdminDashboard from './pages/AdminDashboard';
 import ConsumerPortal from './pages/ConsumerPortal';
 import ManufacturerDashboard from './pages/ManufacturerDashboard';
@@ -25,6 +26,7 @@ function App() {
           
           {/* Protected routes for different user roles */}
           <Route path="/farmer" element={<FarmerDashboard />} />
+          <Route path="/farmer-profile" element={<FarmerProfile />} />
           <Route path="/admin" element={<AdminDashboard />} />
           
           {/* Route for QR Code scanning */}

@@ -8,12 +8,25 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true },
   role: {
     type: String,
-    enum: ['farmer', 'admin', 'manufacturer'], // Add manufacturer here
+    enum: ['farmer', 'admin', 'manufacturer'],
     default: 'farmer',
   },
   otp: { type: String },
   otpExpires: { type: Date },
-  isVerified: { type: Boolean, default: false } // To mark verified users
+  isVerified: { type: Boolean, default: false },
+  // Farmer profile fields
+  phone: { type: String },
+  address: { type: String },
+  photoUrl: { type: String },
+  bio: { type: String },
+  farmName: { type: String },
+  farmSize: { type: String },
+  certifications: [{ type: String }],
+  socialLinks: [{ type: String }],
+  location: {
+    latitude: { type: String },
+    longitude: { type: String }
+  }
 }, { timestamps: true });
 
 // Hash password ONLY when it's being modified OR when the user is new and verified
