@@ -1,13 +1,14 @@
 // controllers/harvestController.js
 const Harvest = require('../models/Harvest');
 const crypto = require('crypto'); 
+const mongoose = require('mongoose');
 
 exports.createHarvest = async (req, res) => {
    console.log('User payload:', req.user);  
   console.log('Request body:', req.body);
   try {
     const {
-      herbId,
+        herbId, // Correct variable name
       quantity,
       unit = 'kg',
       harvestDate,
@@ -23,14 +24,17 @@ exports.createHarvest = async (req, res) => {
     if (!req.user || !req.user.id) {
       return res.status(401).json({ msg: 'Unauthorized: User not found in request' });
     }
-    if (!herbId) return res.status(400).json({ msg: 'Herb ID is required' });
-    if (!quantity || isNaN(quantity)) return res.status(400).json({ msg: 'Quantity is required and must be a number' });
-    if (!harvestDate) return res.status(400).json({ msg: 'Harvest date is required' });
+      if (!herbId) return res.status(400).json({ msg: 'Herb ID is required' });
+      if (!mongoose.Types.ObjectId.isValid(herbId)) {
+        return res.status(400).json({ msg: 'Invalid herb ObjectId. Must be a 24-character hex string.' });
+      }
+      if (!quantity || isNaN(quantity)) return res.status(400).json({ msg: 'Quantity is required and must be a number' });
+      if (!harvestDate) return res.status(400).json({ msg: 'Harvest date is required' });
 
     // --- Map frontend data to schema ---
     const newHarvest = new Harvest({
       farmer: req.user.id,
-      herb: herbId,
+       herb: herbId, // Correct variable name
       quantity: { value: Number(quantity), unit },
       location: {
         description: location || '',

@@ -9,7 +9,7 @@ function HerbSelectionPage() {
   // Static herb data from user
   const herbs = [
     {
-      _id: "1",
+      _id: "6514e2b2c2a1f2b3d4e5f6a1",
       name: "Ashwagandha",
       sanskritName: "अश्वगंधा",
       imageUrl: "https://images.unsplash.com/photo-1579684947554-1be96ebc25f3?w=400&h=300&fit=crop",
@@ -18,7 +18,7 @@ function HerbSelectionPage() {
       category: "adaptogen"
     },
     {
-      _id: "2",
+      _id: "6514e2b2c2a1f2b3d4e5f6a2",
       name: "Turmeric",
       sanskritName: "हरिद्रा",
       imageUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop",
@@ -27,7 +27,7 @@ function HerbSelectionPage() {
       category: "anti-inflammatory"
     },
     {
-      _id: "3",
+      _id: "6514e2b2c2a1f2b3d4e5f6a3",
       name: "Tulsi (Holy Basil)",
       sanskritName: "तुलसी",
       imageUrl: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&h=300&fit=crop",
@@ -36,7 +36,7 @@ function HerbSelectionPage() {
       category: "immunity"
     },
     {
-      _id: "4",
+      _id: "6514e2b2c2a1f2b3d4e5f6a4",
       name: "Triphala",
       sanskritName: "त्रिफला",
       imageUrl: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop",
@@ -45,7 +45,7 @@ function HerbSelectionPage() {
       category: "digestive"
     },
     {
-      _id: "5",
+      _id: "6514e2b2c2a1f2b3d4e5f6a5",
       name: "Brahmi",
       sanskritName: "ब्राह्मी",
       imageUrl: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=400&h=300&fit=crop",
@@ -54,7 +54,7 @@ function HerbSelectionPage() {
       category: "cognitive"
     },
     {
-      _id: "6",
+      _id: "6514e2b2c2a1f2b3d4e5f6a6",
       name: "Neem",
       sanskritName: "नीम",
       imageUrl: "https://images.unsplash.com/photo-1594736797936-d0b9d21faa13?w=400&h=300&fit=crop",
@@ -63,7 +63,7 @@ function HerbSelectionPage() {
       category: "detox"
     },
     {
-      _id: "7",
+      _id: "6514e2b2c2a1f2b3d4e5f6a7",
       name: "Amla (Indian Gooseberry)",
       sanskritName: "आमला",
       imageUrl: "https://images.unsplash.com/photo-1582515073490-39981397c445?w=400&h=300&fit=crop",
@@ -72,7 +72,7 @@ function HerbSelectionPage() {
       category: "immunity"
     },
     {
-      _id: "8",
+      _id: "6514e2b2c2a1f2b3d4e5f6a8",
       name: "Shatavari",
       sanskritName: "शतावरी",
       imageUrl: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=300&fit=crop",
@@ -81,7 +81,7 @@ function HerbSelectionPage() {
       category: "women-health"
     },
     {
-      _id: "9",
+      _id: "6514e2b2c2a1f2b3d4e5f6a9",
       name: "Ginger",
       sanskritName: "आद्रक",
       imageUrl: "https://images.unsplash.com/photo-1587049633312-d628ae50a8ae?w=400&h=300&fit=crop",
@@ -90,7 +90,7 @@ function HerbSelectionPage() {
       category: "digestive"
     },
     {
-      _id: "10",
+      _id: "6514e2b2c2a1f2b3d4e5f6aa",
       name: "Cinnamon",
       sanskritName: "दालचीनी",
       imageUrl: "https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=400&h=300&fit=crop",
@@ -99,7 +99,7 @@ function HerbSelectionPage() {
       category: "metabolic"
     },
     {
-      _id: "11",
+      _id: "6514e2b2c2a1f2b3d4e5f6ab",
       name: "Cardamom",
       sanskritName: "एला",
       imageUrl: "https://images.unsplash.com/photo-1597688648517-6a51b6d4dc81?w=400&h=300&fit=crop",
@@ -108,7 +108,7 @@ function HerbSelectionPage() {
       category: "digestive"
     },
     {
-      _id: "12",
+      _id: "6514e2b2c2a1f2b3d4e5f6ac",
       name: "Licorice (Mulethi)",
       sanskritName: "यष्टिमधु",
       imageUrl: "https://images.unsplash.com/photo-1592318315249-0436ab15bb15?w=400&h=300&fit=crop",
@@ -117,7 +117,7 @@ function HerbSelectionPage() {
       category: "respiratory"
     },
     {
-      _id: "13",
+      _id: "6514e2b2c2a1f2b3d4e5f6ad",
       name: "Sandalwood",
       sanskritName: "चन्दन",
       imageUrl: "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?w=400&h=300&fit=crop",

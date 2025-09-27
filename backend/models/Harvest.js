@@ -7,21 +7,13 @@ const HarvestSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-<<<<<<< HEAD
-  // This now links directly to your Herb model
-=======
   // --- FIX: This now correctly links to the Herb model ---
->>>>>>> 8bff56f461ade4b22631b632aedc710e2a77ce2e
   herb: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Herb',
     required: true,
   },
-<<<<<<< HEAD
-  // We can remove the redundant 'herbName' field
-=======
   // The separate 'herbName' field is no longer needed
->>>>>>> 8bff56f461ade4b22631b632aedc710e2a77ce2e
   location: {
     description: { type: String },
     latitude: { type: String },

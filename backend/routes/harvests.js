@@ -12,6 +12,7 @@ const {
 } = require('../controllers/harvestController');
 
 // All routes here start with /api/harvests
+const { getHarvestByQRCode } = require('../controllers/harvestController');
 
 // --- Static GET routes first ---
 router.get('/myharvests', auth, getFarmerHarvests);

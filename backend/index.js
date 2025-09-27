@@ -8,7 +8,7 @@ const app = express();
 
 // Middleware
 app.use(cors());
-app.use(express.json()); // To parse JSON bodies
+app.use(express.json({ limit: '10mb' })); // To parse JSON bodies, increased limit
 
 // --- Database Connection ---
 mongoose.connect(process.env.MONGO_URI)
