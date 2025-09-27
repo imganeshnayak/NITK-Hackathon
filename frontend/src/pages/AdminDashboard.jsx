@@ -66,7 +66,7 @@ function AdminDashboard() {
                       {pendingHarvests.map((harvest) => (
                         <tr key={harvest._id}>
                           <td className="px-6 py-4 whitespace-nowrap text-sm">
-                            <div className="font-semibold text-gray-900 dark:text-white">{harvest.herb?.name || 'N/A'}</div>
+                            <div className="font-semibold text-gray-900 dark:text-white">{harvest.herbName}</div>
                             <div className="text-gray-500 dark:text-gray-400">{harvest.quantity?.value} {harvest.quantity?.unit}</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -87,7 +87,7 @@ function AdminDashboard() {
                 <div className="md:hidden p-4 space-y-4">
                   {pendingHarvests.map((harvest) => (
                     <div key={harvest._id} className="bg-white dark:bg-gray-700/50 p-4 rounded-lg shadow">
-                      <div className="font-bold text-gray-800 dark:text-white text-lg">{harvest.herb?.name || 'N/A'} - {harvest.quantity?.value} {harvest.quantity?.unit}</div>
+                      <div className="font-bold text-gray-800 dark:text-white text-lg">{harvest.herbName} - {harvest.quantity?.value} {harvest.quantity?.unit}</div>
                       <div className="mt-2 border-t dark:border-gray-600 pt-2 text-sm">
                         <p className="text-gray-700 dark:text-gray-300"><span className="font-semibold">Farmer:</span> {harvest.farmer?.name || 'Deleted User'}</p>
                         <p className="truncate text-gray-700 dark:text-gray-300"><span className="font-semibold">Email:</span> {harvest.farmer?.email || 'N/A'}</p>
@@ -132,7 +132,7 @@ const HarvestDetailModal = ({ harvest, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl max-w-2xl w-full p-6 space-y-4" onClick={e => e.stopPropagation()}>
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">{harvest.herb?.name || 'N/A'}</h2>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">{harvest.herbName}</h2>
           <div className="border-t dark:border-gray-700 pt-4 text-gray-700 dark:text-gray-300 space-y-2">
               <p><span className="font-semibold">Farmer:</span> {harvest.farmer?.name || 'Deleted User'} ({harvest.farmer?.email || 'N/A'})</p>
               <p><span className="font-semibold">Location:</span> {harvest.location?.description || 'N/A'}</p>

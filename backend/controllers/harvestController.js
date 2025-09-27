@@ -75,6 +75,7 @@ exports.getVerifiedHarvests = async (req, res) => {
   try {
     const harvests = await Harvest.find({ status: 'Verified' })
       .populate('farmer', 'name')
+      // REMOVED: .populate('herb', 'name')
       .sort({ createdAt: -1 });
     res.json(harvests);
   } catch (err) {
@@ -117,10 +118,9 @@ exports.getPendingHarvests = async (req, res) => {
     return res.status(403).json({ msg: 'Access denied. Admins only.' });
   }
   try {
-    // We use .populate() to get the farmer's name and email along with the harvest data
     const harvests = await Harvest.find({ status: 'Pending Verification' })
       .populate('farmer', ['name', 'email'])
-      .populate('herb', 'name imageUrl')
+      // REMOVED: .populate('herb', 'name imageUrl')
       .sort({ createdAt: -1 });
     res.json(harvests);
   } catch (err) {
