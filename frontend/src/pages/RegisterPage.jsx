@@ -19,20 +19,16 @@ const EyeSlashIcon = () => (
 
 
 function RegisterPage() {
-    const { t } = useTranslation();
+    // FIX: Specify the 'auth' namespace to load translations from auth.js
+    const { t } = useTranslation('auth');
     const navigate = useNavigate();
     const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'farmer' });
     const [otp, setOtp] = useState('');
-    const [error, setError] = useState(''); // Changed back to setError from alert
+    const [error, setError] = useState('');
     const [message, setMessage] = useState('');
     const [isOtpSent, setIsOtpSent] = useState(false);
-
-    // --- New state for password visibility ---
     const [showPassword, setShowPassword] = useState(false);
-
-    // This logic now runs silently in the background to check password strength
     const [isPasswordStrong, setIsPasswordStrong] = useState(false);
-
     const { name, email, password, role } = formData;
 
     useEffect(() => {
@@ -47,27 +43,24 @@ function RegisterPage() {
 
     const onChange = (e) => setFormData({ ...formData, [e.target.id]: e.target.value });
 
-    // in RegisterPage.jsx
-const handleSendOtp = async (e) => {
-    e.preventDefault();
-    setMessage('');
+    const handleSendOtp = async (e) => {
+        e.preventDefault();
+        setMessage('');
 
-    // Check if password is strong on the frontend first
-    if (!isPasswordStrong) {
-        alert('Password does not meet all requirements.\n\n- At least 8 characters\n- One uppercase letter\n- One lowercase letter\n- One number\n- One special character (@$!%*?&)');
-        return;
-    }
+        if (!isPasswordStrong) {
+            alert('Password does not meet all requirements.\n\n- At least 8 characters\n- One uppercase letter\n- One lowercase letter\n- One number\n- One special character (@$!%*?&)');
+            return;
+        }
 
-    try {
-        const res = await api.post('/auth/send-otp', { name, email, password, role });
-        setMessage(res.data.msg);
-        setIsOtpSent(true);
-    } catch (err) {
-        // This will now log the detailed error and show it in an alert
-        console.error("API Error:", err.response); 
-        alert(err.response?.data?.msg || 'An unknown error occurred.');
-    }
-};
+        try {
+            const res = await api.post('/auth/send-otp', { name, email, password, role });
+            setMessage(res.data.msg);
+            setIsOtpSent(true);
+        } catch (err) {
+            console.error("API Error:", err.response); 
+            alert(err.response?.data?.msg || 'An unknown error occurred.');
+        }
+    };
 
     const handleVerifyOtp = async (e) => {
         e.preventDefault();
@@ -75,14 +68,14 @@ const handleSendOtp = async (e) => {
         try {
             const res = await api.post('/auth/verify-otp', { email, otp });
             localStorage.setItem('token', res.data.token);
-           const decoded = jwtDecode(res.data.token);
-if (decoded.user.role === 'admin') {
-  navigate('/admin');
-} else if (decoded.user.role === 'manufacturer') {
-  navigate('/manufacturer'); 
-} else {
-  navigate('/farmer');
-}
+            const decoded = jwtDecode(res.data.token);
+            if (decoded.user.role === 'admin') {
+                navigate('/admin');
+            } else if (decoded.user.role === 'manufacturer') {
+                navigate('/manufacturer'); 
+            } else {
+                navigate('/farmer');
+            }
         } catch (err) {
             setError(err.response?.data?.msg || 'Verification failed.');
         }
@@ -108,7 +101,6 @@ if (decoded.user.role === 'admin') {
                             <input id="name" type="text" placeholder={t('nameLabel')} required value={name} onChange={onChange} className="w-full px-4 py-3 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-200 focus:border-green-500 focus:ring-green-500"/>
                             <input id="email" type="email" placeholder={t('emailLabel')} required value={email} onChange={onChange} className="w-full px-4 py-3 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-200 focus:border-green-500 focus:ring-green-500"/>
                             
-                            {/* --- Password Input with Eye Icon --- */}
                             <div className="relative">
                                 <input 
                                     id="password" 
@@ -129,18 +121,18 @@ if (decoded.user.role === 'admin') {
                             
                             <select id="role" value={role} onChange={onChange} className="w-full px-4 py-3 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-200 focus:border-green-500 focus:ring-green-500">
                                  <option value="farmer">{t('farmer')}</option>
-                                 <option value="manufacturer">I am a Manufacturer</option>
+                                 <option value="manufacturer">{t('manufacturer')}</option>
                                  <option value="admin">{t('admin')}</option>
                             </select>
                             <button type="submit" className="w-full py-3 font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors">
-                                Send Verification Code
+                                {t('sendOtpButton')}
                             </button>
                         </form>
                     ) : (
                         <form onSubmit={handleVerifyOtp} className="space-y-4">
-                            <input id="otp" type="text" placeholder="Enter 6-Digit OTP" required value={otp} onChange={(e) => setOtp(e.target.value)} className="w-full px-4 py-3 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-200 focus:border-green-500 focus:ring-green-500"/>
+                            <input id="otp" type="text" placeholder={t('otpPlaceholder')} required value={otp} onChange={(e) => setOtp(e.target.value)} className="w-full px-4 py-3 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-200 focus:border-green-500 focus:ring-green-500"/>
                             <button type="submit" className="w-full py-3 font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors">
-                                Verify & Create Account
+                                {t('verifyOtpButton')}
                             </button>
                         </form>
                     )}
