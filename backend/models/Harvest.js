@@ -8,8 +8,7 @@ const HarvestSchema = new mongoose.Schema({
     required: true,
   },
   herb: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Herb',
+    type: String,
     required: true,
   },
   herbName: { 
