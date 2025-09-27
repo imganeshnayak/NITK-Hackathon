@@ -12,21 +12,21 @@ const {
   getHarvestByQRCode
 } = require('../controllers/harvestController');
 
-// All routes here are protected and start with /api/harvests
+// All routes here start with /api/harvests
 
-// Farmer routes
-router.post('/', auth, createHarvest);
+// --- Static GET routes first ---
 router.get('/myharvests', auth, getFarmerHarvests);
-router.get('/:id', auth, getHarvestById);
-
-// Admin routes
 router.get('/pending', auth, getPendingHarvests);
-router.put('/:id/status', auth, updateHarvestStatus);
-
-// Manufacturer (& Admin) routes
 router.get('/verified', auth, getVerifiedHarvests);
 
-// Public route for QR code verification
+// --- Public route for QR code ---
 router.get('/qr/:qrCode', getHarvestByQRCode);
+
+// --- Dynamic GET/PUT routes last ---
+router.get('/:id', auth, getHarvestById);
+router.put('/:id/status', auth, updateHarvestStatus);
+
+// --- General POST route ---
+router.post('/', auth, createHarvest);
 
 module.exports = router;
