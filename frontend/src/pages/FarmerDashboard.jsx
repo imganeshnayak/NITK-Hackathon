@@ -18,7 +18,7 @@ function FarmerDashboard() {
     const fetchHarvests = async () => {
       try {
         const response = await api.get('/harvests/myharvests');
-        setHarvests(response.data);
+  setHarvests(Array.isArray(response.data) ? response.data : []);
         setLoading(false);
       } catch (err) {
         console.error('Error fetching harvests:', err);

@@ -22,7 +22,7 @@ function ManufacturerDashboard() {
         setLoading(true);
         // Get all batches for manufacturer (Verified + Collected)
         const res = await api.get('/harvests/verified');
-        setHarvests(res.data);
+  setHarvests(Array.isArray(res.data) ? res.data : []);
       } catch (err) {
         console.error(err);
         setError('Failed to fetch harvests.');
@@ -149,13 +149,15 @@ function ManufacturerDashboard() {
       {/* QR Code Modal */}
       {qrModal.open && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setQrModal({ open: false, harvest: null })}>
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-lg p-6" onClick={e => e.stopPropagation()}>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Batch QR Code</h2>
-            <div className="flex flex-col items-center gap-4">
-              <QRCodeSVG value={`http://10.213.224.200:5173/batch/${qrModal.harvest?._id}`} size={200} />
-              <p className="text-gray-700 dark:text-gray-300 text-center">Scan to view batch details and all recorded steps.</p>
-              <button type="button" onClick={() => setQrModal({ open: false, harvest: null })} className="py-2 px-4 font-semibold text-white bg-gray-500 rounded hover:bg-gray-600 transition-colors">Close</button>
-            </div>
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-2xl w-full max-w-sm p-6 flex flex-col items-center" onClick={e => e.stopPropagation()}>
+            <h2 className="text-xl font-bold text-green-800 dark:text-green-300 mb-4 text-center">Batch QR Code</h2>
+            <QRCodeSVG value={`http://192.168.1.127:5173/batch/${qrModal.harvest?._id}`} size={200} />
+            <button
+              className="mt-4 text-xs text-green-800 dark:text-green-300 underline"
+              onClick={() => navigator.clipboard.writeText(`http://192.168.1.127:5173/batch/${qrModal.harvest?._id}`)}
+            >Copy Batch Link</button>
+            <span className="text-xs text-gray-700 dark:text-gray-200 mt-2">Scan or share to view full batch lifecycle</span>
+            <button type="button" onClick={() => setQrModal({ open: false, harvest: null })} className="mt-6 py-2 px-4 font-semibold text-white bg-gray-700 rounded hover:bg-gray-800 transition-colors w-full">Close</button>
           </div>
         </div>
       )}
@@ -212,11 +214,38 @@ const EmptyState = ({ onClear }) => (
 );
 
 const HarvestDetailModal = ({ harvest, onClose }) => {
+  // Try to parse adminRemarks for readable admin info
+  let adminRemarksText = harvest.adminRemarks || 'None';
+  let adminInfoBlock = null;
+  if (harvest.adminRemarks) {
+    try {
+      const parsed = JSON.parse(harvest.adminRemarks);
+      if (parsed.adminInfo) {
+        adminInfoBlock = (
+          <div className="col-span-full mt-4 p-4 rounded-lg bg-gray-100 dark:bg-gray-700">
+            <h3 className="text-lg font-bold mb-2 text-gray-800 dark:text-white">Admin Approval Info</h3>
+            <ul className="space-y-1 text-gray-700 dark:text-gray-200">
+              <li><span className="font-semibold">Name:</span> {parsed.adminInfo.name}</li>
+              <li><span className="font-semibold">Email:</span> {parsed.adminInfo.email}</li>
+              <li><span className="font-semibold">Department:</span> {parsed.adminInfo.department}</li>
+              <li><span className="font-semibold">Office Location:</span> {parsed.adminInfo.officeLocation}</li>
+              <li><span className="font-semibold">Access Level:</span> {parsed.adminInfo.accessLevel}</li>
+              <li><span className="font-semibold">Role:</span> {parsed.adminInfo.role}</li>
+            </ul>
+            <div className="mt-2 text-gray-600 dark:text-gray-300"><span className="font-semibold">Remarks:</span> {parsed.adminRemarks || 'None'}</div>
+          </div>
+        );
+        adminRemarksText = '';
+      }
+    } catch (e) {
+      // Not JSON, show as plain text
+      adminInfoBlock = null;
+    }
+  }
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-2xl p-6 overflow-y-auto max-h-[90vh]" onClick={e => e.stopPropagation()}>
-  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{harvest.herbName || 'Unknown Herb'}</h2>
-
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{harvest.herbName || 'Unknown Herb'}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700 dark:text-gray-300">
           <p><span className="font-semibold">Farmer:</span> {harvest.farmer?.name || 'Deleted User'}</p>
           <p><span className="font-semibold">Location:</span> {harvest.location?.description || 'N/A'}</p>
@@ -229,7 +258,7 @@ const HarvestDetailModal = ({ harvest, onClose }) => {
           <p><span className="font-semibold">Harvest Date:</span> {new Date(harvest.harvestDate).toLocaleDateString()}</p>
           <p><span className="font-semibold">Certifications:</span> {harvest.certifications?.join(', ') || 'None'}</p>
           <p><span className="font-semibold">Additional Info:</span> {harvest.additionalInfo || 'None'}</p>
-          <p><span className="font-semibold">Manufacturer Update:</span> {harvest.manufacturerUpdate ? (
+          <p className="col-span-full"><span className="font-semibold">Manufacturer Update:</span> {harvest.manufacturerUpdate ? (
             <span>
               <br />Processing: {harvest.manufacturerUpdate.processingDetails || 'N/A'}
               <br />Remarks: {harvest.manufacturerUpdate.remarks || 'N/A'}
@@ -238,9 +267,26 @@ const HarvestDetailModal = ({ harvest, onClose }) => {
             </span>
           ) : 'None'}
           </p>
-          <p><span className="font-semibold">Admin Remarks:</span> {harvest.adminRemarks || 'None'}</p>
+          {harvest.blockchainTx && (
+            <p className="col-span-full"><span className="font-semibold">Blockchain Tx Hash:</span> <span className="font-mono break-all">{harvest.blockchainTx}</span></p>
+          )}
+          {adminInfoBlock}
+          {adminRemarksText && (
+            <p className="col-span-full"><span className="font-semibold">Admin Remarks:</span> {adminRemarksText}</p>
+          )}
         </div>
-
+        {harvest.blockchainTx && (
+          <div className="mt-6 text-center">
+            <a
+              href={`https://sepolia.etherscan.io/tx/${harvest.blockchainTx}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block py-2 px-4 font-semibold text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors"
+            >
+              View on Etherscan
+            </a>
+          </div>
+        )}
         <button onClick={onClose} className="mt-6 w-full py-2 font-semibold text-white bg-gray-500 rounded-lg hover:bg-gray-600 transition-colors">
           Close
         </button>

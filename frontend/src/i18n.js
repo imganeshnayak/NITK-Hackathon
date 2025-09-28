@@ -8,6 +8,7 @@ import { homeTranslations } from './translations/home.js';
 import { farmerDashboardTranslations } from './translations/farmerdashboard.js';
 import { herbSelectionTranslations } from './translations/herbSelection.js';
 import { navbarTranslations } from './translations/navbar.js'; 
+import { adminDashboardTranslations } from './translations/adminDashboard.js';
 
 // 2. Combine all imported translations into the structure that i18next expects
 const resources = {
@@ -16,28 +17,32 @@ const resources = {
     home: homeTranslations.en,
     farmerDashboard: farmerDashboardTranslations.en,
     herbSelection: herbSelectionTranslations.en,
-    navbar: navbarTranslations.en, // <-- Add the navbar namespace
+    navbar: navbarTranslations.en,
+    adminDashboard: adminDashboardTranslations.en,
   },
   hi: {
     auth: authTranslations.hi,
     home: homeTranslations.hi,
     farmerDashboard: farmerDashboardTranslations.hi,
     herbSelection: herbSelectionTranslations.hi,
-    navbar: navbarTranslations.hi, // <-- Add the navbar namespace
+    navbar: navbarTranslations.hi,
+    adminDashboard: adminDashboardTranslations.hi,
   },
   kn: {
     auth: authTranslations.kn,
     home: homeTranslations.kn,
     farmerDashboard: farmerDashboardTranslations.kn,
     herbSelection: herbSelectionTranslations.kn,
-    navbar: navbarTranslations.kn, // <-- Add the navbar namespace
+    navbar: navbarTranslations.kn,
+    adminDashboard: adminDashboardTranslations.kn,
   },
   ml: {
     auth: authTranslations.ml,
     home: homeTranslations.ml,
     farmerDashboard: farmerDashboardTranslations.ml,
     herbSelection: herbSelectionTranslations.ml,
-    navbar: navbarTranslations.ml, // <-- Add the navbar namespace
+    navbar: navbarTranslations.ml,
+    adminDashboard: adminDashboardTranslations.ml,
   },
 };
 
@@ -48,7 +53,7 @@ i18n
   .init({
     resources, 
     fallbackLng: 'en',
-    ns: ['auth', 'home', 'farmerDashboard', 'herbSelection', 'navbar'], // <-- Add the new namespace to the list
+  ns: ['auth', 'home', 'farmerDashboard', 'herbSelection', 'navbar', 'adminDashboard'],
     defaultNS: 'home', 
 
     interpolation: {

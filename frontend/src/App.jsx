@@ -7,6 +7,8 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import FarmerDashboard from './pages/FarmerDashboard';
 import FarmerProfile from './pages/FarmerProfile';
+import AdminProfile from './pages/AdminProfile';
+import ManufacturerProfile from './pages/ManufacturerProfile';
 import AdminDashboard from './pages/AdminDashboard';
 import ConsumerPortal from './pages/ConsumerPortal';
 import ManufacturerDashboard from './pages/ManufacturerDashboard';
@@ -29,11 +31,13 @@ function App() {
           <Route path="/farmer" element={<FarmerDashboard />} />
           <Route path="/farmer-profile" element={<FarmerProfile />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin-profile" element={<AdminProfile />} />
           
           {/* Route for QR Code scanning */}
           <Route path="/verify/:batchId" element={<ConsumerPortal />} />
           
           <Route path="/manufacturer" element={<ManufacturerDashboard />} /> 
+          <Route path="/manufacturer-profile" element={<ManufacturerProfile />} />
           
           {/* Batch registration flow */}
           <Route path="/herb-selection" element={<HerbSelectionPage />} />

@@ -13,7 +13,9 @@ function Navbar() {
 
   // --- Smart Link Logic (no changes here) ---
   let dashboardPath = '/'; 
-  let showFarmerProfile = false;
+    let showFarmerProfile = false;
+    let showAdminProfile = false;
+    let showManufacturerProfile = false;
   
   if (token) {
     try {
@@ -22,8 +24,14 @@ function Navbar() {
         dashboardPath = '/farmer';
         showFarmerProfile = true;
       }
-      if (decoded.user.role === 'admin') dashboardPath = '/admin';
-      if (decoded.user.role === 'manufacturer') dashboardPath = '/manufacturer';
+      if (decoded.user.role === 'admin') {
+        dashboardPath = '/admin';
+        showAdminProfile = true;
+      }
+      if (decoded.user.role === 'manufacturer') {
+        dashboardPath = '/manufacturer';
+        showManufacturerProfile = true;
+      }
     } catch (error) {
       console.error("Invalid token:", error);
       localStorage.removeItem('token'); 
@@ -56,6 +64,16 @@ function Navbar() {
               <>
                 {showFarmerProfile && (
                   <Link to="/farmer-profile" className="text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">
+                    {t('profile')}
+                  </Link>
+                )}
+                {showAdminProfile && (
+                  <Link to="/admin-profile" className="text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">
+                    {t('profile')}
+                  </Link>
+                )}
+                {showManufacturerProfile && (
+                  <Link to="/manufacturer-profile" className="text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">
                     {t('profile')}
                   </Link>
                 )}
@@ -99,6 +117,16 @@ function Navbar() {
             <>
               {showFarmerProfile && (
                 <Link to="/farmer-profile" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">
+                  {t('profile')}
+                </Link>
+              )}
+              {showAdminProfile && (
+                <Link to="/admin-profile" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">
+                  {t('profile')}
+                </Link>
+              )}
+              {showManufacturerProfile && (
+                <Link to="/manufacturer-profile" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">
                   {t('profile')}
                 </Link>
               )}

@@ -1,0 +1,455 @@
+[
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "batchId",
+				"type": "string"
+			}
+		],
+		"name": "BatchRecorded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "batchId",
+				"type": "string"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "processingDetails",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "remarks",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "storageLocation",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "batchNumber",
+						"type": "string"
+					}
+				],
+				"indexed": false,
+				"internalType": "struct BatchLifecycle.ManufacturerUpdate",
+				"name": "update",
+				"type": "tuple"
+			}
+		],
+		"name": "ManufacturerUpdated",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "batchId",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "herbName",
+				"type": "string"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "email",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "village",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "city",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "pincode",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "state",
+						"type": "string"
+					}
+				],
+				"internalType": "struct BatchLifecycle.FarmerInfo",
+				"name": "farmer",
+				"type": "tuple"
+			},
+			{
+				"internalType": "uint256",
+				"name": "quantity",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "unit",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "harvestDate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string[]",
+				"name": "certifications",
+				"type": "string[]"
+			},
+			{
+				"internalType": "string",
+				"name": "additionalInfo",
+				"type": "string"
+			}
+		],
+		"name": "recordBatch",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "batchId",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "status",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "adminRemarks",
+				"type": "string"
+			}
+		],
+		"name": "StatusUpdated",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "batchId",
+				"type": "string"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "processingDetails",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "remarks",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "storageLocation",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "batchNumber",
+						"type": "string"
+					}
+				],
+				"internalType": "struct BatchLifecycle.ManufacturerUpdate",
+				"name": "update",
+				"type": "tuple"
+			}
+		],
+		"name": "updateManufacturerDetails",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "batchId",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "status",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "adminRemarks",
+				"type": "string"
+			}
+		],
+		"name": "updateStatus",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"name": "batches",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "herbName",
+				"type": "string"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "email",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "village",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "city",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "pincode",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "state",
+						"type": "string"
+					}
+				],
+				"internalType": "struct BatchLifecycle.FarmerInfo",
+				"name": "farmer",
+				"type": "tuple"
+			},
+			{
+				"internalType": "uint256",
+				"name": "quantity",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "unit",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "harvestDate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "additionalInfo",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "status",
+				"type": "string"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "processingDetails",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "remarks",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "storageLocation",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "batchNumber",
+						"type": "string"
+					}
+				],
+				"internalType": "struct BatchLifecycle.ManufacturerUpdate",
+				"name": "manufacturerUpdate",
+				"type": "tuple"
+			},
+			{
+				"internalType": "string",
+				"name": "adminRemarks",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "batchId",
+				"type": "string"
+			}
+		],
+		"name": "getBatch",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "herbName",
+				"type": "string"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "email",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "village",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "city",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "pincode",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "state",
+						"type": "string"
+					}
+				],
+				"internalType": "struct BatchLifecycle.FarmerInfo",
+				"name": "farmer",
+				"type": "tuple"
+			},
+			{
+				"internalType": "uint256",
+				"name": "quantity",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "unit",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "harvestDate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string[]",
+				"name": "certifications",
+				"type": "string[]"
+			},
+			{
+				"internalType": "string",
+				"name": "additionalInfo",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "status",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "adminRemarks",
+				"type": "string"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "processingDetails",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "remarks",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "storageLocation",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "batchNumber",
+						"type": "string"
+					}
+				],
+				"internalType": "struct BatchLifecycle.ManufacturerUpdate",
+				"name": "manufacturerUpdate",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]

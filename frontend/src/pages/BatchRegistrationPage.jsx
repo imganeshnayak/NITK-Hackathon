@@ -139,6 +139,9 @@ function BatchRegistrationPage() {
     return Object.keys(newErrors).length === 0;
   };
   
+
+ const generateBatchId = () => 'VC-' + Date.now();
+
  const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -148,8 +151,11 @@ function BatchRegistrationPage() {
 
   try {
     // Prepare API payload
+  const batchId = generateBatchId();
+  console.log('Generated batchId:', batchId);
     const harvestData = {
-      herbName: formData.herbName,    // Only send herb name
+      batchId, // Add batchId to payload
+      herbName: formData.herbName,
       quantity: parseFloat(formData.quantity),
       unit: formData.unit,
       harvestDate: formData.harvestDate,
@@ -162,12 +168,15 @@ function BatchRegistrationPage() {
       },
       certifications: formData.certifications,
       additionalInfo: formData.additionalInfo,
-      photoUrl: image                  // Base64 image
+      photoUrl: image
     };
 
     const response = await api.post('/harvests', harvestData);
 
     console.log('Harvest created:', response.data);
+    if (response.data.blockchainTx) {
+      console.log('Blockchain transaction hash:', response.data.blockchainTx);
+    }
     setSuccess(true);
 
     // Redirect after success

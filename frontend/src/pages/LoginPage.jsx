@@ -33,6 +33,7 @@ function LoginPage() {
       const res = await api.post('/auth/login', { email, password });
       localStorage.setItem('token', res.data.token);
       const decoded = jwtDecode(res.data.token);
+      localStorage.setItem('userId', decoded.user.id || decoded.user._id);
       if (decoded.user.role === 'admin') {
         navigate('/admin');
       } else if (decoded.user.role === 'manufacturer') {

@@ -28,7 +28,14 @@ const UserSchema = new mongoose.Schema({
     city: { type: String },
     village: { type: String },
     state: { type: String }
-  }
+  },
+  // Admin profile fields
+  department: { type: String },
+  officeLocation: { type: String },
+  adminNotes: { type: String },
+  lastLogin: { type: Date },
+  accessLevel: { type: String },
+  activityLog: [{ action: String, timestamp: Date, details: String }]
 }, { timestamps: true });
 
 // Hash password ONLY when it's being modified OR when the user is new and verified

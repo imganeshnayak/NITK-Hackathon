@@ -49,8 +49,10 @@ const Harvest = require('../models/Harvest');
 const crypto = require('crypto'); 
 const mongoose = require('mongoose');
 
+const { recordBatch } = require('../blockchain');
+
 exports.createHarvest = async (req, res) => {
-   console.log('User payload:', req.user);  
+  console.log('User payload:', req.user);
   console.log('Request body:', req.body);
   try {
     const {
@@ -70,9 +72,9 @@ exports.createHarvest = async (req, res) => {
     if (!req.user || !req.user.id) {
       return res.status(401).json({ msg: 'Unauthorized: User not found in request' });
     }
-      if (!herbName) return res.status(400).json({ msg: 'Herb name is required' });
-      if (!quantity || isNaN(quantity)) return res.status(400).json({ msg: 'Quantity is required and must be a number' });
-      if (!harvestDate) return res.status(400).json({ msg: 'Harvest date is required' });
+    if (!herbName) return res.status(400).json({ msg: 'Herb name is required' });
+    if (!quantity || isNaN(quantity)) return res.status(400).json({ msg: 'Quantity is required and must be a number' });
+    if (!harvestDate) return res.status(400).json({ msg: 'Harvest date is required' });
 
     // --- Map frontend data to schema ---
     const newHarvest = new Harvest({
@@ -93,8 +95,51 @@ exports.createHarvest = async (req, res) => {
       qrCodeData: crypto.randomBytes(16).toString('hex')
     });
 
+    // Save to MongoDB first
     const savedHarvest = await newHarvest.save();
-    res.status(201).json(savedHarvest);
+
+    // Fetch farmer user document for blockchain tuple
+    let blockchainTx = null;
+    try {
+      const User = require('../models/user');
+      const farmerDoc = await User.findById(req.user.id);
+      if (!farmerDoc) throw new Error('Farmer user not found');
+
+      // Prepare farmer tuple for contract
+      const farmerTuple = {
+        name: farmerDoc.name || '',
+        email: farmerDoc.email || '',
+        village: farmerDoc.location?.village || '',
+        city: farmerDoc.location?.city || '',
+        pincode: farmerDoc.location?.pincode || '',
+        state: farmerDoc.location?.state || ''
+      };
+
+      // Convert harvestDate to Unix timestamp
+      const harvestTimestamp = Math.floor(new Date(harvestDate).getTime() / 1000);
+
+      blockchainTx = await recordBatch(
+        savedHarvest._id.toString(), // batchId
+        herbName,
+        farmerTuple,
+        Number(quantity),
+        unit,
+        harvestTimestamp,
+        Array.isArray(certifications) ? certifications : [],
+        additionalInfo || ''
+      );
+      console.log('Blockchain Tx Hash:', blockchainTx);
+      // Save hash to MongoDB
+      savedHarvest.blockchainTx = blockchainTx;
+      await savedHarvest.save();
+    } catch (blockchainErr) {
+      console.error('Blockchain recording error:', blockchainErr);
+    }
+
+    res.status(201).json({
+      ...savedHarvest.toObject(),
+      blockchainTx: savedHarvest.blockchainTx || blockchainTx
+    });
 
   } catch (err) {
     console.error('Harvest creation error:', err);
@@ -168,9 +213,11 @@ exports.getPendingHarvests = async (req, res) => {
   try {
     const harvests = await Harvest.find({ status: 'Pending Verification' })
       .populate('farmer', ['name', 'email'])
-      // REMOVED: .populate('herb', 'name imageUrl')
       .sort({ createdAt: -1 });
-    res.json(harvests);
+    res.json(harvests.map(h => ({
+      ...h.toObject(),
+      blockchainTx: h.blockchainTx || ''
+    })));
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -188,9 +235,63 @@ exports.updateHarvestStatus = async (req, res) => {
     if (!harvest) return res.status(404).json({ msg: 'Harvest not found' });
 
     harvest.status = status;
-    if (adminRemarks) {
-      harvest.adminRemarks = adminRemarks;
+    // Fetch admin info
+    let adminInfo = null;
+    if (status === 'Verified') {
+      const User = require('../models/user');
+      const adminDoc = await User.findById(req.user.id);
+      if (adminDoc) {
+        adminInfo = {
+          name: adminDoc.name || '',
+          email: adminDoc.email || '',
+          department: adminDoc.department || '',
+          officeLocation: adminDoc.officeLocation || '',
+          accessLevel: adminDoc.accessLevel || '',
+          role: adminDoc.role || '',
+          id: adminDoc._id.toString()
+        };
+      }
+      // Encode admin info in adminRemarks as JSON
+      harvest.adminRemarks = JSON.stringify({
+        adminRemarks: adminRemarks || '',
+        adminInfo
+      });
+      harvest.approvedBy = req.user.id;
+      harvest.rejectedBy = null;
+    } else if (status === 'Rejected') {
+      harvest.adminRemarks = adminRemarks || '';
+      harvest.rejectedBy = req.user.id;
+      harvest.approvedBy = null;
+    } else {
+      if (adminRemarks) harvest.adminRemarks = adminRemarks;
     }
+
+    // Call smart contract updateStatus if approved
+    const { contract } = require('../blockchain');
+    let blockchainTx = null;
+    if (status === 'Verified') {
+      try {
+        const tx = await contract.updateStatus(
+          harvest._id.toString(),
+          status,
+          harvest.adminRemarks // JSON string with admin info
+        );
+        await tx.wait();
+        blockchainTx = tx.hash;
+        harvest.blockchainTx = blockchainTx;
+        // Log decoded admin info
+        try {
+          const decoded = JSON.parse(harvest.adminRemarks);
+          console.log('Admin approval info:', decoded.adminInfo);
+        } catch (e) {
+          console.log('Could not decode admin info:', harvest.adminRemarks);
+        }
+        console.log(`Blockchain approval event: Harvest ${harvest._id} approved by admin ${req.user.id}. Tx hash: ${blockchainTx}`);
+      } catch (blockchainErr) {
+        console.error('Blockchain updateStatus error:', blockchainErr);
+      }
+    }
+
     await harvest.save();
     res.json(harvest);
   } catch (err) {
@@ -208,7 +309,10 @@ exports.getVerifiedHarvests = async (req, res) => {
     const harvests = await Harvest.find({ status: 'Verified' })
       .populate('farmer', ['name', 'email'])
       .sort({ createdAt: -1 });
-    res.json(harvests);
+    res.json(harvests.map(h => ({
+      ...h.toObject(),
+      blockchainTx: h.blockchainTx || ''
+    })));
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

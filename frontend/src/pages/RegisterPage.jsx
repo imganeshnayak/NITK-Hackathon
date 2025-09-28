@@ -69,6 +69,7 @@ function RegisterPage() {
             const res = await api.post('/auth/verify-otp', { email, otp });
             localStorage.setItem('token', res.data.token);
             const decoded = jwtDecode(res.data.token);
+            localStorage.setItem('userId', decoded.user.id || decoded.user._id);
             if (decoded.user.role === 'admin') {
                 navigate('/admin');
             } else if (decoded.user.role === 'manufacturer') {
